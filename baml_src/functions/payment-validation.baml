@@ -1,8 +1,3 @@
-function PaymentValidation {
-    input string
-    output PaymentValidationData
-}
-
 class ExactPaymentData {
     exactAmount float
     quote string
@@ -38,26 +33,21 @@ class PaymentValidationData {
     notReceived bool @description("Is the agency stating they have not yet received payment which was previously asked for.  This should only be true for follow ups to previous requests for payment or invoices, and not for new payment requests.")
 }
 
-impl<llm, PaymentValidation> v1 {
-    client GPT4Client
+function PaymentValidation(request_text: string) -> PaymentValidationData {
+  client GPT4Client
+  prompt #"
+    Given this email extract any payment related content
 
-    prompt #"
-        Given this email extract any payment related content
+    ###
+    {{ request_text }}
+    ###
 
-        ###
-        {#input}
-        ###
+    Before the output format, summarize all the payment related content.
+    Example:
+    <summary...>
 
-        OUTPUT FORMAT:
-        {#print_type(output)}
-
-        Before OUTPUT FORMAT, summarize all the payment related content.
-        Example: 
-        <summary...>
-        {
-            ...
-        }
-    "#
+    {{ ctx.output_format }}
+  "#
 }
 
 

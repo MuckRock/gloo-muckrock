@@ -10,14 +10,21 @@ from typing import Any, Awaitable, Callable, Dict, List, Tuple
 import tiktoken
 from pydantic import BaseModel
 
-from ..baml_client import baml as b
-from ..baml_client.baml_types import (
+from ..baml_client.async_client import b
+from ..baml_client.types import (
     FOIARequestData,
     PaymentValidationData,
     RecordsStatus,
     RequestStatus,
 )
-from ..baml_client.tracing import set_tags, trace
+
+
+def trace(func):
+    return func
+
+
+def set_tags(**kwargs):
+    pass
 
 
 class MRStatus(Enum):
