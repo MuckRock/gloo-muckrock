@@ -1,5 +1,5 @@
 function Summarize(input: string) -> string {
-  client GPT35Client
+  client GPT5MiniClient
   prompt #"
     Extract data from the following TEXT that is a request for public records from a government agency.
 

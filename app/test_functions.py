@@ -1,4 +1,4 @@
-from baml_client.baml_types import (
+from baml_client.types import (
     FOIARequestData,
     RecordsStatus,
     RequestStatus,
@@ -6,7 +6,6 @@ from baml_client.baml_types import (
 from typing import NamedTuple, Optional, Tuple, List
 import pytest
 
-from baml_client.testing import baml_test
 from . import process_request
 import json
 from pydantic import BaseModel
@@ -29,7 +28,12 @@ async def base_test(test_case: FoiaTestCasePayload):
     extracted_data, status = await process_request(
         test_case.communication or "", test_case.file_text or ""
     )
-    assert status == test_case.status
+    assert status == test_case.status, (
+        f"Expected {test_case.status!r}, got {status!r}\n"
+        f"  reasoning: {extracted_data.reasoning}\n"
+        f"  requestStatus: {extracted_data.requestStatus}\n"
+        f"  recordsStatus: {extracted_data.recordsStatus}"
+    )
     if test_case.price:
         assert extracted_data.price == test_case.price
 
@@ -40,7 +44,7 @@ def load_tests(file):
 
 
 class TestStatusDone:
-    @baml_test
+    @pytest.mark.asyncio
     @pytest.mark.parametrize(
         "test_case", load_tests("tests/status_done.json"), ids=lambda x: x.name
     )
@@ -49,7 +53,7 @@ class TestStatusDone:
 
 
 class TestStatusFix:
-    @baml_test
+    @pytest.mark.asyncio
     @pytest.mark.parametrize(
         "test_case", load_tests("tests/status_fix.json"), ids=lambda x: x.name
     )
@@ -58,7 +62,7 @@ class TestStatusFix:
 
 
 class TestStatusIndeterminate:
-    @baml_test
+    @pytest.mark.asyncio
     @pytest.mark.parametrize(
         "test_case",
         load_tests("tests/status_indeterminate.json"),
@@ -69,7 +73,7 @@ class TestStatusIndeterminate:
 
 
 class TestStatusNoDocs:
-    @baml_test
+    @pytest.mark.asyncio
     @pytest.mark.parametrize(
         "test_case", load_tests("tests/status_no_docs.json"), ids=lambda x: x.name
     )
@@ -78,7 +82,7 @@ class TestStatusNoDocs:
 
 
 class TestStatusOther:
-    @baml_test
+    @pytest.mark.asyncio
     @pytest.mark.parametrize(
         "test_case", load_tests("tests/status_other.json"), ids=lambda x: x.name
     )
@@ -87,7 +91,7 @@ class TestStatusOther:
 
 
 class TestStatusPartial:
-    @baml_test
+    @pytest.mark.asyncio
     @pytest.mark.parametrize(
         "test_case", load_tests("tests/status_partial.json"), ids=lambda x: x.name
     )
@@ -96,7 +100,7 @@ class TestStatusPartial:
 
 
 class TestStatusPayment:
-    @baml_test
+    @pytest.mark.asyncio
     @pytest.mark.parametrize(
         "test_case", load_tests("tests/status_payment.json"), ids=lambda x: x.name
     )
@@ -105,7 +109,7 @@ class TestStatusPayment:
 
 
 class TestStatusProcessed:
-    @baml_test
+    @pytest.mark.asyncio
     @pytest.mark.parametrize(
         "test_case",
         load_tests("tests/status_processed.json"),
@@ -116,7 +120,7 @@ class TestStatusProcessed:
 
 
 class TestStatusRejected:
-    @baml_test
+    @pytest.mark.asyncio
     @pytest.mark.parametrize(
         "test_case", load_tests("tests/status_rejected.json"), ids=lambda x: x.name
     )
@@ -125,7 +129,7 @@ class TestStatusRejected:
 
 
 class TestEstimatedDates:
-    @baml_test
+    @pytest.mark.asyncio
     @pytest.mark.parametrize(
         "test_case",
         load_tests("tests/estimated_dates.json"),
@@ -141,7 +145,7 @@ class TestEstimatedDates:
 
 
 class TestTrackingNumbers:
-    @baml_test
+    @pytest.mark.asyncio
     @pytest.mark.parametrize(
         "test_case",
         load_tests("tests/tracking_numbers.json"),

@@ -10,21 +10,30 @@ from typing import Any, Awaitable, Callable, Dict, List, Tuple
 import tiktoken
 from pydantic import BaseModel
 
-from ..baml_client.async_client import b
-from ..baml_client.types import (
-    FOIARequestData,
-    PaymentValidationData,
-    RecordsStatus,
-    RequestStatus,
-)
+try:
+    # Django context: app is imported as muckrock.gloo.app
+    from ..baml_client.async_client import b
+    from ..baml_client.types import (
+        FOIARequestData,
+        PaymentValidationData,
+        RecordsStatus,
+        RequestStatus,
+    )
+except ImportError:
+    # Test context: app is a top-level package, use absolute imports
+    from baml_client.async_client import b  # type: ignore[no-redef]
+    from baml_client.types import (  # type: ignore[no-redef]
+        FOIARequestData,
+        PaymentValidationData,
+        RecordsStatus,
+        RequestStatus,
+    )
 
 
-def trace(func):
-    return func
-
-
-def set_tags(**kwargs):
-    pass
+try:
+    from ..baml_client.tracing import set_tags, trace
+except ImportError:
+    from baml_client.tracing import set_tags, trace  # type: ignore[no-redef]
 
 
 class MRStatus(Enum):

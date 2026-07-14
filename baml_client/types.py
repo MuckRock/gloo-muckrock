@@ -67,8 +67,8 @@ class ExactPaymentData(BaseModel):
     quote: str
 
 class FOIARequestData(BaseModel):
-    trackingNumber: typing.Optional[str] = None
-    dateEstimate: typing.Optional[str] = Field(default=None, description='An ISO8601 string of the date by which the agency estimates it will complete processing the request. Use null if not present.')
+    trackingNumber: typing.Optional[str] = Field(default=None, description='The government agency\'s assigned tracking, case, or reference number for this specific FOIA/public records request — for example \'A-2023-01089\', \'FOIA-2022-002-00322\', \'Case Number 116392\', \'RD 77093\'. Only extract the agency-assigned reference for this request. Do not extract internal file numbers, court case numbers, or other unrelated identifiers mentioned incidentally.')
+    dateEstimate: typing.Optional[str] = Field(default=None, description='An ISO8601 string of the date by which the agency estimates it will complete processing the request or provide the next installment of records. Extract any stated or estimated completion date, including phrases like \'on or before\', \'by approximately\', \'we expect to respond by\'. Use null if not present.')
     price: typing.Optional[float] = Field(default=None, description='The total balance remaining to pay for this request, as a float. Use null if not present.')
     priceDetails: typing.Optional[str] = Field(default=None, description='A sentence describing what the price is for (e.g. per page or record delivered, etc). null if not present.')
     reasoning: str
@@ -79,7 +79,7 @@ class PaymentValidationData(BaseModel):
     paymentAmount: typing.Optional[float] = Field(default=None, description='The amount of money the agency is requesting, if they have given an amount')
     estimate: bool = Field(description='Is the amount of money being requested an estimate?  This is opposed to it being an exact amount.')
     required: bool = Field(description='Is the payment required now, before they will process the request, whether it is an estimate of the final cost or not, or is it just a notice that payment will be required in the future?')
-    responseRequired: bool = Field(description='If the payment is required before they will process the request, are they asking for any sort of response before accepting payment, such as how you would like to proceed, confirmation to proceed, if you accept the charges, need to choose between versions of the request, or any other modifications of the request?')
+    responseRequired: bool = Field(description='Is the agency requiring the requester to make a decision about the REQUEST SCOPE or MODIFICATIONS before the payment can be determined or accepted — for example, choosing between different versions of the request, narrowing the scope, or providing additional information that changes what is being requested? Set to false if the agency is simply asking for payment or for the requester to confirm they want to proceed with payment as-is.')
     notReceived: bool = Field(description='Is the agency stating they have not yet received payment which was previously asked for.  This should only be true for follow ups to previous requests for payment or invoices, and not for new payment requests.')
 
 class PaymentValidationData2(BaseModel):
