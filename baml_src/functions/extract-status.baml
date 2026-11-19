@@ -25,7 +25,7 @@ enum RequestStatus {
 }
 
 function ExtractRequestData(request_text: string) -> FOIARequestData {
-  client GPT5Client
+  client GPT61SolClient
   prompt #"
     You are analyzing public records correspondence to figure out what the status of the request for public records is. Your job is to extract the information from the government's response and classify the status of the request.
 
