@@ -34,7 +34,7 @@ class PaymentValidationData {
 }
 
 function PaymentValidation(request_text: string) -> PaymentValidationData {
-  client GPT5Client
+  client GPT61SolClient
   prompt #"
     Given this email extract any payment related content.
 
